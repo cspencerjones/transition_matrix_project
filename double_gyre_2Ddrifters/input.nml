@@ -1,0 +1,22 @@
+ &MOM_input_nml
+         output_directory = './',
+         input_filename = 'n'
+         restart_input_dir = 'INPUT/',
+         restart_output_dir = 'RESTART/',
+         parameter_filename = 'MOM_input',
+                              'MOM_override' /
+
+ &diag_manager_nml
+ /
+
+ &particle_driver_nml
+   date_init = 1,1,1,0,0,0
+   calendar = 'noleap'
+   months=0
+   days=1
+ /
+
+ &particles_nml
+   really_debug = .true.  
+   traj_write_hrs = 1 
+/
