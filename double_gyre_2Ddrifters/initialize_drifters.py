@@ -1,3 +1,4 @@
+import xarray as xr
 import netCDF4 as nc
 import numpy as np
 
@@ -42,8 +43,22 @@ def createParticlesNC(fnam,ids,ines,jnes,lons,lats,levs,days):
     dv[:]=days[:]
     f.sync()
     f.close()
+
+lon1D = np.arange(5,15,1)
+lat1D = np.arange(32,45,1)
+
+lonmesh,latmesh = np.meshgrid(lon1D,lat1D)
+
+sizemesh = lonmesh.ravel().size
     
-    
-createParticlesNC('drifters.res.nc',ids=[1,2,3],ines=[0,0,0],jnes=[0,0,0],lons=[20.1,20.3,20.6],lats=[44.625,44.375,44.875],levs=[1, 1, 1],days=[0,0,0])
+id_list = np.arange(1,sizemesh+1,1).tolist()
+ines_list = [0] * sizemesh
+jnes_list = [0] * sizemesh
+lons_list = lonmesh.ravel().tolist()
+lats_list = latmesh.ravel().tolist()
+levs_list = [10]* (sizemesh//2) + [1010]* (sizemesh//2)
+days_list = [0]* sizemesh
+
+createParticlesNC('drifters.res.nc',ids=id_list,ines=ines_list ,jnes=jnes_list,lons=lons_list,lats=lats_list,levs=levs_list,days=days_list)
 
 

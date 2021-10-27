@@ -6,17 +6,10 @@
          parameter_filename = 'MOM_input',
                               'MOM_override' /
 
- &diag_manager_nml
- /
 
- &particle_driver_nml
-   date_init = 1,1,1,0,0,0
-   calendar = 'noleap'
-   months=0
-   days=1
- /
 
  &particles_nml
    really_debug = .true.  
-   traj_write_hrs = 6 
-/
+   traj_write_hrs = 48
+   traj_sample_hrs = 48
+/ 

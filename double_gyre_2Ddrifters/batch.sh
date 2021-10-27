@@ -15,4 +15,4 @@
 module load intel/2020b
 module load netCDF-Fortran/4.5.3
 
-mpirun -n 8 /scratch/user/spencerjones/double_gyre_drifters/MOM6
+mpirun -n 8 /scratch/user/spencerjones/transition_matrix_project/double_gyre_2Ddrifters/MOM6
