@@ -9,7 +9,6 @@
 
 
  &particles_nml
-   really_debug = .true.  
    traj_write_hrs = 48
    traj_sample_hrs = 48
 / 

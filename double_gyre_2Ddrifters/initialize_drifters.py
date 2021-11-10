@@ -56,7 +56,7 @@ ines_list = [0] * sizemesh
 jnes_list = [0] * sizemesh
 lons_list = lonmesh.ravel().tolist()
 lats_list = latmesh.ravel().tolist()
-levs_list = [10]* (sizemesh//2) + [1010]* (sizemesh//2)
+levs_list = [500]* (sizemesh//2) + [1060]* (sizemesh//2)
 days_list = [0]* sizemesh
 
 createParticlesNC('drifters.res.nc',ids=id_list,ines=ines_list ,jnes=jnes_list,lons=lons_list,lats=lats_list,levs=levs_list,days=days_list)
