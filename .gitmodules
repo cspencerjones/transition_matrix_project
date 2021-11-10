@@ -10,3 +10,4 @@
 [submodule "src/drifters"]
 	path = src/drifters
 	url = git@github.com:cspencerjones/drifters.git
+	branch = demo-fms
