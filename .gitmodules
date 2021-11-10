@@ -1,0 +1,12 @@
+[submodule "src/MOM6"]
+	path = src/MOM6
+	url = git@github.com:NOAA-GFDL/MOM6.git
+[submodule "src/FMS"]
+	path = src/FMS
+	url = git@github.com:NOAA-GFDL/FMS.git
+[submodule "src/mkmf"]
+	path = src/mkmf
+	url = git@github.com:NOAA-GFDL/mkmf.git
+[submodule "src/drifters"]
+	path = src/drifters
+	url = git@github.com:cspencerjones/drifters.git
