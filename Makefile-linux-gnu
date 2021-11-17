@@ -1,0 +1,55 @@
+SHELL = bash
+PLATFORM = linux
+COMPILER = gnu
+RUN_CMD = mpirun
+
+all: build/MOM6_solo.$(PLATFORM).$(COMPILER).debug/MOM6_solo
+
+
+
+build/FMS.$(PLATFORM).$(COMPILER)/libFMS.a:
+	mkdir -p build/FMS.$(PLATFORM).$(COMPILER)
+	(cd build/FMS.$(PLATFORM).$(COMPILER)/; \
+	rm -f path_names; ../../src/mkmf/bin/list_paths ../../src/FMS; \
+	../../src/mkmf/bin/mkmf -t ../../src/mkmf/templates/$(PLATFORM)-$(COMPILER).mk \
+	-l '-L$(CONDA_PREFIX)/lib -lnetcdf -lnetcdff -lmpich -lmpifort' -p libFMS.a \
+	-c "-Duse_libMPI -Duse_netCDF -DSPMD -DLAND_BND_TRACERS" path_names; \
+	source ../../build/env/$(PLATFORM)-$(COMPILER); make  NETCDF=3 REPRO=1 libFMS.a)
+
+build/MOM6.$(PLATFORM).$(COMPILER).debug/libMOM6.a: build/FMS.$(PLATFORM).$(COMPILER)/libFMS.a
+	mkdir -p build/MOM6.$(PLATFORM).$(COMPILER).debug
+	(cd build/MOM6.$(PLATFORM).$(COMPILER).debug/; rm -f path_names; ../../src/mkmf/bin/list_paths -l \
+	../../src/MOM6/config_src/{memory/dynamic_symmetric,drivers/FMS_cap,infra/FMS1,external/GFDL_ocean_BGC,external/ODA_hooks}  \
+        ../../src/MOM6/{src/*,src/*/*,src/*/*/*} ../../src/drifters/*;  \
+	../../src/mkmf/bin/mkmf -t ../../src/mkmf/templates/$(PLATFORM)-$(COMPILER).mk -o \
+	'-I../FMS.$(PLATFORM).$(COMPILER) ' \
+	-p libMOM6.a -l '-L../FMS.$(PLATFORM).$(COMPILER) -lfms' -c \
+	"-Duse_libMPI -Duse_netCDF -DSPMD -DLAND_BND_TRACERS -Duse_AM3_physics " path_names; \
+	source ../../build/env/$(PLATFORM)-$(COMPILER); make  NETCDF=3 DEBUG=1  libMOM6.a)
+
+build/MOM6_solo.$(PLATFORM).$(COMPILER).debug/MOM6_solo: build/MOM6.$(PLATFORM).$(COMPILER).debug/libMOM6.a
+	mkdir -p build/MOM6_solo.$(PLATFORM).$(COMPILER).debug
+	(cd build/MOM6_solo.$(PLATFORM).$(COMPILER).debug/; \
+	rm -f path_names; ../../src/mkmf/bin/list_paths \
+        ../../src/MOM6/config_src/drivers/solo_driver/*  ;\
+	../../src/mkmf/bin/mkmf -t ../../src/mkmf/templates/$(PLATFORM)-$(COMPILER).mk -o  \
+	'-I../../src/MOM6/src/framework -I../FMS.$(PLATFORM).$(COMPILER)  \
+        -I../../src/MOM6/config_src/memory/dynamic_symmetric -I../MOM6.$(PLATFORM).$(COMPILER).debug' \
+        -l '-L../MOM6.$(PLATFORM).$(COMPILER).debug -lMOM6 -L../FMS.$(PLATFORM).$(COMPILER) -lFMS \
+	-L$(CONDA_PREFIX)/lib -lnetcdf -lnetcdff -lmpich -lmpifort' \
+        -p MOM6_solo -c " -Duse_netCDF -DSPMD" path_names; \
+	source ../../build/env/$(PLATFORM)-$(COMPILER); make  NETCDF=3 DEBUG=1  MOM6_solo)
+
+
+double_gyre_2Ddrifters/drifters.res.nc:
+
+	(cd double_gyre_2Ddrifters;python initialize_drifters.py)
+
+
+double_gyre_2Ddrifters/ocean.stats: build/MOM6_solo.$(PLATFORM).$(COMPILER).debug/MOM6_solo double_gyre_2Ddrifters/drifters.res.nc
+
+	(export LD_LIBRARY_PATH=$(CONDA_PREFIX)/lib;cd double_gyre_2Ddrifters;mpirun -n 1 ../build/MOM6_solo.$(PLATFORM).$(COMPILER).debug/MOM6_solo)
+
+clean:
+	(rm -rf build/{FMS*,MOM6*})
+	(rm -rf .results)
