@@ -12,6 +12,3 @@
 	path = src/drifters
 	url = git@github.com:cspencerjones/drifters.git
         branch = spencer-multilevel
-[submodule "MOM6"]
-	path = MOM6
-	url = git@github.com:cspencerjones/MOM6.git
