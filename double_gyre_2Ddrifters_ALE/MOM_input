@@ -1,7 +1,7 @@
 ! This file was written by the model and records the non-default parameters used at run-time.
 
 ! === module MOM ===
-ADIABATIC = True                !   [Boolean] default = False
+ADIABATIC = False                !   [Boolean] default = False
                                 ! There are no diapycnal mass fluxes if ADIABATIC is true. This assumes that KD
                                 ! = KDML = 0.0 and that there is no buoyancy forcing, but makes the model faster
                                 ! by eliminating subroutine calls.
