@@ -787,7 +787,7 @@ DIAG_OUTPUT_MOD
 unknown
 
                                      time
-Total runtime                       192.563736
-Initialization                        0.522973
-Main loop                           192.019318
-Termination                           0.012684
+Total runtime                       185.306835
+Initialization                        0.618670
+Main loop                           184.553800
+Termination                           0.099729
