@@ -44,20 +44,22 @@ def createParticlesNC(fnam,ids,ines,jnes,lons,lats,levs,days):
     f.sync()
     f.close()
 
-lon1D = np.arange(5,15,1)
-lat1D = np.arange(32,45,1)
+lon1D = np.arange(5,10,0.5)
+lat1D = np.arange(40,43,0.5)
 
 lonmesh,latmesh = np.meshgrid(lon1D,lat1D)
 
 sizemesh = lonmesh.ravel().size
+nolevels = 20
+noparts = sizemesh*nolevels
     
-id_list = np.arange(1,sizemesh+1,1).tolist()
-ines_list = [0] * sizemesh
-jnes_list = [0] * sizemesh
-lons_list = lonmesh.ravel().tolist()
-lats_list = latmesh.ravel().tolist()
-levs_list = [10]* (sizemesh//2) + [1010]* (sizemesh//2)
-days_list = [0]* sizemesh
+id_list = np.arange(1,noparts+1,1).tolist()
+ines_list = [0] * noparts
+jnes_list = [0] * noparts
+lons_list = np.repeat(lonmesh.ravel().tolist(),nolevels)
+lats_list = np.repeat(latmesh.ravel().tolist(),nolevels)
+levs_list = np.repeat(np.expand_dims(np.linspace(300,400,nolevels),0),sizemesh,axis=0).ravel()
+days_list = [0]* noparts
 
 createParticlesNC('drifters.res.nc',ids=id_list,ines=ines_list ,jnes=jnes_list,lons=lons_list,lats=lats_list,levs=levs_list,days=days_list)
 

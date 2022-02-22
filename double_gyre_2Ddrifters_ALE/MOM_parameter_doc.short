@@ -1,10 +1,6 @@
 ! This file was written by the model and records the non-default parameters used at run-time.
 
 ! === module MOM ===
-ADIABATIC = True                !   [Boolean] default = False
-                                ! There are no diapycnal mass fluxes if ADIABATIC is true. This assumes that KD
-                                ! = KDML = 0.0 and that there is no buoyancy forcing, but makes the model faster
-                                ! by eliminating subroutine calls.
 USE_REGRIDDING = True           !   [Boolean] default = False
                                 ! If True, use the ALE algorithm (regridding/remapping). If False, use the
                                 ! layered isopycnal algorithm.
@@ -54,7 +50,7 @@ LENLAT = 20.0                   !   [degrees]
                                 ! The latitudinal length of the domain.
 LENLON = 22.0                   !   [degrees]
                                 ! The longitudinal length of the domain.
-TOPO_CONFIG = "spoon"           !
+TOPO_CONFIG = "flat"            !
                                 ! This specifies how bathymetry is specified:
                                 !     file - read bathymetric information from the file
                                 !       specified by (TOPO_FILE).
@@ -88,12 +84,31 @@ MAXIMUM_DEPTH = 2000.0          !   [m]
 
 ! === module MOM_verticalGrid ===
 ! Parameters providing information about the vertical grid.
-NK = 2                          !   [nondim]
+NK = 10                         !   [nondim]
                                 ! The number of model layers.
 
 ! === module MOM_EOS ===
 
 ! === module MOM_tracer_flow_control ===
+USE_REGIONAL_DYES = True        !   [Boolean] default = False
+                                ! If true, use the regional_dyes tracer package.
+
+! === module regional_dyes ===
+NUM_DYE_TRACERS = 1             ! default = 0
+                                ! The number of dye tracers in this run. Each tracer should have a separate
+                                ! region.
+DYE_SOURCE_MINLON = 5.0         !   [not defined]
+                                ! This is the starting longitude at which we start injecting dyes.
+DYE_SOURCE_MAXLON = 10.0        !   [not defined]
+                                ! This is the ending longitude at which we finish injecting dyes.
+DYE_SOURCE_MINLAT = 40.0        !   [not defined]
+                                ! This is the starting latitude at which we start injecting dyes.
+DYE_SOURCE_MAXLAT = 43.0        !   [not defined]
+                                ! This is the ending latitude at which we finish injecting dyes.
+DYE_SOURCE_MINDEPTH = 300.0     !   [m]
+                                ! This is the minimum depth at which we inject dyes.
+DYE_SOURCE_MAXDEPTH = 400.0     !   [m]
+                                ! This is the maximum depth at which we inject dyes.
 
 ! === module MOM_coord_initialization ===
 COORD_CONFIG = "linear"         ! default = "none"
@@ -124,7 +139,21 @@ REGRIDDING_COORDINATE_MODE = "Z*" ! default = "LAYER"
                                 !  HYCOM1 - HyCOM-like hybrid coordinate
                                 !  SLIGHT - stretched coordinates above continuous isopycnal
                                 !  ADAPTIVE - optimize for smooth neutral density surfaces
-!ALE_RESOLUTION = 2*1000.0      !   [m]
+ALE_COORDINATE_CONFIG = "PARAM" ! default = "UNIFORM"
+                                ! Determines how to specify the coordinate resolution. Valid options are:
+                                !  PARAM       - use the vector-parameter ALE_RESOLUTION
+                                !  UNIFORM[:N] - uniformly distributed
+                                !  FILE:string - read from a file. The string specifies
+                                !                the filename and variable name, separated
+                                !                by a comma or space, e.g. FILE:lev.nc,dz
+                                !                or FILE:lev.nc,interfaces=zw
+                                !  WOA09[:N]   - the WOA09 vertical grid (approximately)
+                                !  FNC1:string - FNC1:dz_min,H_total,power,precision
+                                !  HYBRID:string - read from a file. The string specifies
+                                !                the filename and two variable names, separated
+                                !                by a comma or space, for sigma-2 and dz. e.g.
+                                !                HYBRID:vgrid.nc,sigma2,dz
+ALE_RESOLUTION = 7*100.0, 200.0, 2*500.0 !   [m]
                                 ! The distribution of vertical resolution for the target
                                 ! grid used for Eulerian-like coordinates. For example,
                                 ! in z-coordinate mode, the parameter is a list of level
@@ -132,34 +161,6 @@ REGRIDDING_COORDINATE_MODE = "Z*" ! default = "LAYER"
                                 ! is of non-dimensional fractions of the water column.
 
 ! === module MOM_state_initialization ===
-TS_CONFIG = "linear"            !
-                                ! A string that determines how the initial tempertures and salinities are
-                                ! specified for a new run:
-                                !     file - read velocities from the file specified
-                                !       by (TS_FILE).
-                                !     fit - find the temperatures that are consistent with
-                                !       the layer densities and salinity S_REF.
-                                !     TS_profile - use temperature and salinity profiles
-                                !       (read from TS_FILE) to set layer densities.
-                                !     benchmark - use the benchmark test case T & S.
-                                !     linear - linear in logical layer space.
-                                !     DOME2D - 2D DOME initialization.
-                                !     ISOMIP - ISOMIP initialization.
-                                !     adjustment2d - 2d lock exchange T/S ICs.
-                                !     sloshing - sloshing mode T/S ICs.
-                                !     seamount - no motion test with seamount ICs.
-                                !     dumbbell - sloshing channel ICs.
-                                !     rossby_front - a mixed layer front in thermal wind balance.
-                                !     SCM_CVMix_tests - used in the SCM CVMix tests.
-                                !     USER - call a user modified routine.
-T_TOP = 5.0                     !   [degC]
-                                ! Initial temperature of the top surface.
-T_RANGE = 0.0                   !   [degC]
-                                ! Initial temperature difference (top-bottom).
-S_TOP = 35.0                    !   [PSU]
-                                ! Initial salinity of the top surface.
-S_RANGE = 2.0                   !   [PSU]
-                                ! Initial salinity difference (top-bottom).
 
 ! === module MOM_diag_mediator ===
 
@@ -194,7 +195,7 @@ KV = 1.0E-04                    !   [m2 s-1]
 ! === module MOM_continuity ===
 
 ! === module MOM_continuity_PPM ===
-ETA_TOLERANCE = 1.0E-12         !   [m] default = 1.0E-10
+ETA_TOLERANCE = 1.0E-12         !   [m] default = 5.0E-10
                                 ! The tolerance for the differences between the barotropic and baroclinic
                                 ! estimates of the sea surface height due to the fluxes through each face.  The
                                 ! total tolerance for SSH is 4 times this value.  The default is
@@ -273,6 +274,19 @@ DTBT = -0.9                     !   [s or nondim] default = -0.98
 ! === module MOM_diabatic_driver ===
 ! The following parameters are used for diabatic processes.
 
+! === module MOM_set_diffusivity ===
+
+! === module MOM_bkgnd_mixing ===
+! Adding static vertical background mixing coefficients
+KD = 1.0E-04                    !   [m2 s-1] default = 0.0
+                                ! The background diapycnal diffusivity of density in the interior. Zero or the
+                                ! molecular value, ~1e-7 m2 s-1, may be used.
+
+! === module MOM_diabatic_aux ===
+! The following parameters are used for auxiliary diabatic processes.
+
+! === module MOM_opacity ===
+
 ! === module MOM_tracer_advect ===
 
 ! === module MOM_tracer_hor_diff ===
@@ -285,6 +299,8 @@ READ_DEPTH_LIST = True          !   [Boolean] default = False
 DEPTH_LIST_MIN_INC = 1.0E-06    !   [m] default = 1.0E-10
                                 ! The minimum increment between the depths of the entries in the depth-list
                                 ! file.
+
+! === module ocean_stochastics_init ===
 
 ! === module MOM_surface_forcing ===
 VARIABLE_WINDS = False          !   [Boolean] default = True
@@ -302,7 +318,7 @@ WIND_CONFIG = "2gyre"           ! default = "zero"
 DT_FORCING = 2400.0             !   [s] default = 1200.0
                                 ! The time step for changing forcing, coupling with other components, or
                                 ! potentially writing certain diagnostics. The default value is given by DT.
-DAYMAX = 2.0                    !   [days]
+DAYMAX = 360.0                  !   [days]
                                 ! The final time of the whole simulation, in units of TIMEUNIT seconds.  This
                                 ! also sets the potential end time of the present run segment if the end time is
                                 ! not set via ocean_solo_nml in input.nml.
@@ -311,6 +327,6 @@ RESTART_CONTROL = 3             ! default = 1
                                 ! for a time-stamped file, and odd (bit 0) for a non-time-stamped file. A
                                 ! non-time-stamped restart file is saved at the end of the run segment for any
                                 ! non-negative value.
-RESTINT = 10.0                  !   [days] default = 0.0
+RESTINT = 30.0                  !   [days] default = 0.0
                                 ! The interval between saves of the restart file in units of TIMEUNIT.  Use 0
                                 ! (the default) to not save incremental restart files at all.

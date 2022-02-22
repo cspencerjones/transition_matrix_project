@@ -52,7 +52,7 @@ LENLAT = 20.0                   !   [degrees]
                                 ! The latitudinal length of the domain.
 LENLON = 22.0                   !   [degrees]
                                 ! The longitudinal length of the domain.
-TOPO_CONFIG = "spoon"           !
+TOPO_CONFIG = "flat"           !
                                 ! This specifies how bathymetry is specified:
                                 !     file - read bathymetric information from the file
                                 !       specified by (TOPO_FILE).
@@ -86,12 +86,25 @@ MAXIMUM_DEPTH = 2000.0          !   [m]
 
 ! === module MOM_verticalGrid ===
 ! Parameters providing information about the vertical grid.
-NK = 2                          !   [nondim]
+NK = 10                          !   [nondim]
                                 ! The number of model layers.
+
+! === module MOM_tracer_registry ===
+NUM_DYE_TRACERS = 1
+
+DYE_SOURCE_MINLON = 5
+DYE_SOURCE_MAXLON = 10
+DYE_SOURCE_MINLAT = 40
+DYE_SOURCE_MAXLAT = 43
+DYE_SOURCE_MINDEPTH = 300
+DYE_SOURCE_MAXDEPTH = 400
 
 ! === module MOM_EOS ===
 
 ! === module MOM_tracer_flow_control ===
+!USE_IDEAL_AGE_TRACER = True     !   [Boolean] default = False
+                                ! If true, use the ideal_age_example tracer package.
+USE_REGIONAL_DYES = True
 
 ! === module MOM_coord_initialization ===
 COORD_CONFIG = "linear"         ! default = "none"
@@ -122,7 +135,8 @@ REGRIDDING_COORDINATE_MODE = "Z*" ! default = "LAYER"
                                 !  HYCOM1 - HyCOM-like hybrid coordinate
                                 !  SLIGHT - stretched coordinates above continuous isopycnal
                                 !  ADAPTIVE - optimize for smooth neutral density surfaces
-!ALE_RESOLUTION = 2*1000.0      !   [m]
+ALE_COORDINATE_CONFIG = "PARAM"
+ALE_RESOLUTION = 100.0,100.0,100.0,100.0,100.0,100.0,100.0,200.0,500.0,500.0      !   [m]
                                 ! The distribution of vertical resolution for the target
                                 ! grid used for Eulerian-like coordinates. For example,
                                 ! in z-coordinate mode, the parameter is a list of level
@@ -150,9 +164,9 @@ TS_CONFIG = "linear"            !
                                 !     rossby_front - a mixed layer front in thermal wind balance.
                                 !     SCM_CVMix_tests - used in the SCM CVMix tests.
                                 !     USER - call a user modified routine.
-T_TOP = 5.0                     !   [degC]
+T_TOP = 25.0                     !   [degC]
                                 ! Initial temperature of the top surface.
-T_RANGE = 0.0                   !   [degC]
+T_RANGE = 20.0                   !   [degC]
                                 ! Initial temperature difference (top-bottom).
 S_TOP = 35.0                    !   [PSU]
                                 ! Initial salinity of the top surface.
@@ -271,6 +285,12 @@ DTBT = -0.9                     !   [s or nondim] default = -0.98
 ! === module MOM_diabatic_driver ===
 ! The following parameters are used for diabatic processes.
 
+! === module MOM_bkgnd_mixing ===
+! Adding static vertical background mixing coefficients
+KD = 1.0E-04                         !   [m2 s-1] default = 0.0
+                                ! The background diapycnal diffusivity of density in the interior. Zero 
+or the
+
 ! === module MOM_tracer_advect ===
 
 ! === module MOM_tracer_hor_diff ===
@@ -296,11 +316,13 @@ WIND_CONFIG = "2gyre"           ! default = "zero"
                                 ! (const), (Neverworld), (scurves), (ideal_hurr), (SCM_ideal_hurr),
                                 ! (SCM_CVmix_tests) and (USER).
 
+!BUOY_CONFIG = "linear"
+
 ! === module MOM_main (MOM_driver) ===
 DT_FORCING = 2400.0             !   [s] default = 1200.0
                                 ! The time step for changing forcing, coupling with other components, or
                                 ! potentially writing certain diagnostics. The default value is given by DT.
-DAYMAX = 30.0                    !   [days]
+DAYMAX = 360.0                    !   [days]
                                 ! The final time of the whole simulation, in units of TIMEUNIT seconds.  This
                                 ! also sets the potential end time of the present run segment if the end time is
                                 ! not set via ocean_solo_nml in input.nml.
@@ -309,6 +331,6 @@ RESTART_CONTROL = 3             ! default = 1
                                 ! for a time-stamped file, and odd (bit 0) for a non-time-stamped file. A
                                 ! non-time-stamped restart file is saved at the end of the run segment for any
                                 ! non-negative value.
-RESTINT = 10.0                  !   [days] default = 0.0
+RESTINT = 30.0                  !   [days] default = 0.0
                                 ! The interval between saves of the restart file in units of TIMEUNIT.  Use 0
                                 ! (the default) to not save incremental restart files at all.

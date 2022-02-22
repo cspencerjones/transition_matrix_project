@@ -1,4 +1,93 @@
-Startup CPU time:        0.121 sec summed across    1 PEs.
+Startup CPU time:       11.928 sec summed across    8 PEs.
          Day, Step number,     CPU time, CPU time change
-       0.000,           0,        0.121,        0.121
-       2.000,         144,       10.267,       10.146
+       0.000,           0,       11.928,       11.928
+      60.000,        4320,      267.086,      255.157
+Startup CPU time:       13.653 sec summed across    8 PEs.
+         Day, Step number,     CPU time, CPU time change
+      60.000,           0,       13.653,       13.653
+Startup CPU time:       28.652 sec summed across    8 PEs.
+         Day, Step number,     CPU time, CPU time change
+      60.000,           0,       28.652,       28.652
+     360.000,       21600,     1362.932,     1334.280
+Startup CPU time:        8.244 sec summed across    8 PEs.
+         Day, Step number,     CPU time, CPU time change
+      60.000,           0,        8.244,        8.244
+     360.000,       21600,     1692.637,     1684.394
+Startup CPU time:       35.730 sec summed across    8 PEs.
+         Day, Step number,     CPU time, CPU time change
+      60.000,           0,       35.730,       35.730
+     360.000,       21600,     8798.438,     8762.708
+Startup CPU time:       47.506 sec summed across    8 PEs.
+         Day, Step number,     CPU time, CPU time change
+      60.000,           0,       47.506,       47.506
+Startup CPU time:        8.787 sec summed across    8 PEs.
+         Day, Step number,     CPU time, CPU time change
+      60.000,           0,        8.787,        8.787
+     360.000,       21600,     1774.764,     1765.978
+Startup CPU time:       27.282 sec summed across    8 PEs.
+         Day, Step number,     CPU time, CPU time change
+      60.000,           0,       27.282,       27.282
+     360.000,       21600,     1875.033,     1847.751
+Startup CPU time:       11.762 sec summed across    8 PEs.
+         Day, Step number,     CPU time, CPU time change
+      60.000,           0,       11.762,       11.762
+     360.000,       21600,     1867.770,     1856.008
+Startup CPU time:       12.307 sec summed across    8 PEs.
+         Day, Step number,     CPU time, CPU time change
+      60.000,           0,       12.307,       12.307
+     360.000,       21600,     1829.061,     1816.754
+Startup CPU time:       19.262 sec summed across    8 PEs.
+         Day, Step number,     CPU time, CPU time change
+      60.000,           0,       19.262,       19.262
+     360.000,       21600,     1961.260,     1941.998
+Startup CPU time:       23.615 sec summed across    8 PEs.
+         Day, Step number,     CPU time, CPU time change
+      60.000,           0,       23.615,       23.615
+     360.000,       21600,     1947.471,     1923.856
+Startup CPU time:       41.470 sec summed across    8 PEs.
+         Day, Step number,     CPU time, CPU time change
+      60.000,           0,       41.470,       41.470
+     360.000,       21600,     2158.538,     2117.069
+Startup CPU time:       44.448 sec summed across    8 PEs.
+         Day, Step number,     CPU time, CPU time change
+      60.000,           0,       44.448,       44.448
+     360.000,       21600,     2181.598,     2137.150
+Startup CPU time:       24.860 sec summed across    8 PEs.
+         Day, Step number,     CPU time, CPU time change
+      60.000,           0,       24.860,       24.860
+     360.000,       21600,     2103.197,     2078.337
+Startup CPU time:       32.903 sec summed across    8 PEs.
+         Day, Step number,     CPU time, CPU time change
+      60.000,           0,       32.903,       32.903
+     360.000,       21600,     2168.269,     2135.366
+Startup CPU time:       12.066 sec summed across    8 PEs.
+         Day, Step number,     CPU time, CPU time change
+      60.000,           0,       12.066,       12.066
+     360.000,       21600,     2117.443,     2105.378
+Startup CPU time:       24.291 sec summed across    8 PEs.
+         Day, Step number,     CPU time, CPU time change
+      60.000,           0,       24.291,       24.291
+     360.000,       21600,     2424.582,     2400.290
+Startup CPU time:       33.297 sec summed across    8 PEs.
+         Day, Step number,     CPU time, CPU time change
+      60.000,           0,       33.297,       33.297
+     360.000,       21600,     2128.962,     2095.665
+Startup CPU time:       27.648 sec summed across    8 PEs.
+         Day, Step number,     CPU time, CPU time change
+      60.000,           0,       27.648,       27.648
+     360.000,       21600,     2141.792,     2114.144
+Startup CPU time:       41.899 sec summed across    8 PEs.
+         Day, Step number,     CPU time, CPU time change
+      60.000,           0,       41.899,       41.899
+Startup CPU time:       23.462 sec summed across    8 PEs.
+         Day, Step number,     CPU time, CPU time change
+      60.000,           0,       23.462,       23.462
+     360.000,       21600,     1485.565,     1462.103
+Startup CPU time:       16.045 sec summed across    8 PEs.
+         Day, Step number,     CPU time, CPU time change
+      60.000,           0,       16.045,       16.045
+     360.000,       21600,     1551.245,     1535.199
+Startup CPU time:       15.464 sec summed across    8 PEs.
+         Day, Step number,     CPU time, CPU time change
+      60.000,           0,       15.464,       15.464
+     360.000,       21600,     1555.404,     1539.940

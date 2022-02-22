@@ -45,7 +45,7 @@ def createParticlesNC(fnam,ids,ines,jnes,lons,lats,levs,days):
     f.close()
 
 lon1D = np.arange(5,15,1)
-lat1D = np.arange(32,45,1)
+lat1D = np.arange(-60,5,1)
 
 lonmesh,latmesh = np.meshgrid(lon1D,lat1D)
 
