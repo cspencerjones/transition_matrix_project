@@ -22,9 +22,11 @@ DTBT_RESET_PERIOD = -1.0        !   [s] default = 2400.0
                                 ! is negative, DTBT is set based only on information available at
                                 ! initialization.  If 0, DTBT will be set every dynamics time step. The default
                                 ! is set by DT_THERM.  This is only used if SPLIT is true.
+SAVE_INITIAL_CONDS = True 
+
 
 ! === module MOM_domains ===
-REENTRANT_X = False             !   [Boolean] default = True
+REENTRANT_X = True             !   [Boolean] default = True
                                 ! If true, the domain is zonally reentrant.
 NIGLOBAL = 44                   !
                                 ! The total number of thickness grid points in the x-direction in the physical
@@ -32,6 +34,13 @@ NIGLOBAL = 44                   !
 NJGLOBAL = 40                   !
                                 ! The total number of thickness grid points in the y-direction in the physical
                                 ! domain. With STATIC_MEMORY_ this is set in MOM_memory.h at compile time.
+
+LAYOUT = 2, 4                   !
+                                ! The processor layout that was actually used.
+IO_LAYOUT = 1, 1                ! default = 1
+                                ! The processor layout to be used, or 0,0 to automatically set the io_layout to
+                                ! be the same as the layout.
+
 
 ! === module MOM_fixed_initialization ===
 INPUTDIR = "INPUT"              ! default = "."
@@ -46,7 +55,7 @@ GRID_CONFIG = "spherical"       !
                                 !     cartesian - use a (flat) Cartesian grid.
                                 !     spherical - use a simple spherical grid.
                                 !     mercator - use a Mercator spherical grid.
-SOUTHLAT = 30.0                 !   [degrees]
+SOUTHLAT = -50.0                 !   [degrees]
                                 ! The southern latitude of the domain.
 LENLAT = 20.0                   !   [degrees]
                                 ! The latitudinal length of the domain.
@@ -81,12 +90,23 @@ TOPO_CONFIG = "flat"           !
                                 !     USER - call a user modified routine.
 MINIMUM_DEPTH = 1.0             !   [m] default = 0.0
                                 ! The minimum depth of the ocean.
-MAXIMUM_DEPTH = 2000.0          !   [m]
+MAXIMUM_DEPTH = 3000.0          !   [m]
                                 ! The maximum depth of the ocean.
+!TOPO_FILE = "topog_bump.nc"
+
+SPONGE = True
+
+SPONGE_CONFIG = "file"
+
+!SPONGE_FILE = "sponge_IC.nc"
+
+SPONGE_DAMPING_FILE = "sponge_damping.nc"
+
+SPONGE_PTEMP_VAR = "Temp" 
 
 ! === module MOM_verticalGrid ===
 ! Parameters providing information about the vertical grid.
-NK = 10                          !   [nondim]
+NK = 30                          !   [nondim]
                                 ! The number of model layers.
 
 ! === module MOM_tracer_registry ===
@@ -136,7 +156,7 @@ REGRIDDING_COORDINATE_MODE = "Z*" ! default = "LAYER"
                                 !  SLIGHT - stretched coordinates above continuous isopycnal
                                 !  ADAPTIVE - optimize for smooth neutral density surfaces
 ALE_COORDINATE_CONFIG = "PARAM"
-ALE_RESOLUTION = 100.0,100.0,100.0,100.0,100.0,100.0,100.0,200.0,500.0,500.0      !   [m]
+ALE_RESOLUTION = 5.0, 10.0, 15.0, 20.0, 20.0, 30.0, 50.0, 50.0, 50.0,50.0,50.0, 50.0,50.0,70.0,80.0, 100.0,100.0,100.0,100.0,200.0,100.0,100.0,100.0,100.0,200.00,200.00,200.0, 200.0, 200.0, 200.0     !   [m]
                                 ! The distribution of vertical resolution for the target
                                 ! grid used for Eulerian-like coordinates. For example,
                                 ! in z-coordinate mode, the parameter is a list of level
@@ -164,13 +184,13 @@ TS_CONFIG = "linear"            !
                                 !     rossby_front - a mixed layer front in thermal wind balance.
                                 !     SCM_CVMix_tests - used in the SCM CVMix tests.
                                 !     USER - call a user modified routine.
-T_TOP = 25.0                     !   [degC]
+T_TOP = 6                     !   [degC]
                                 ! Initial temperature of the top surface.
-T_RANGE = 20.0                   !   [degC]
+T_RANGE = 6                   !   [degC]
                                 ! Initial temperature difference (top-bottom).
 S_TOP = 35.0                    !   [PSU]
                                 ! Initial salinity of the top surface.
-S_RANGE = 2.0                   !   [PSU]
+S_RANGE = 0.0                   !   [PSU]
                                 ! Initial salinity difference (top-bottom).
 
 ! === module MOM_diag_mediator ===
@@ -186,7 +206,7 @@ HBBL = 10.0                     !   [m]
                                 ! BOTTOMDRAGLAW is not defined, or the thickness over which near-bottom
                                 ! velocities are averaged for the drag law if BOTTOMDRAGLAW is defined but
                                 ! LINEAR_DRAG is not.
-DRAG_BG_VEL = 0.1               !   [m s-1] default = 0.0
+DRAG_BG_VEL = 0.5               !   [m s-1] default = 0.0
                                 ! DRAG_BG_VEL is either the assumed bottom velocity (with LINEAR_DRAG) or an
                                 ! unresolved  velocity that is combined with the resolved velocity to estimate
                                 ! the velocity magnitude.  DRAG_BG_VEL is only used when BOTTOMDRAGLAW is
@@ -195,11 +215,15 @@ BBL_THICK_MIN = 0.1             !   [m] default = 0.0
                                 ! The minimum bottom boundary layer thickness that can be used with
                                 ! BOTTOMDRAGLAW. This might be Kv/(cdrag*drag_bg_vel) to give Kv as the minimum
                                 ! near-bottom viscosity.
-KV = 1.0E-04                    !   [m2 s-1]
+KV = 1.0E-05                    !   [m2 s-1]
                                 ! The background kinematic viscosity in the interior. The molecular value, ~1e-6
                                 ! m2 s-1, may be used.
 
 ! === module MOM_thickness_diffuse ===
+THICKNESSDIFFUSE = True
+
+KHTH = 500.0
+
 
 ! === module MOM_dynamics_split_RK2 ===
 
@@ -287,9 +311,10 @@ DTBT = -0.9                     !   [s or nondim] default = -0.98
 
 ! === module MOM_bkgnd_mixing ===
 ! Adding static vertical background mixing coefficients
-KD = 1.0E-04                         !   [m2 s-1] default = 0.0
+KD = 0.5E-05                         !   [m2 s-1] default = 0.0
                                 ! The background diapycnal diffusivity of density in the interior. Zero 
 or the
+KDML = 1.0E-02
 
 ! === module MOM_tracer_advect ===
 
@@ -305,9 +330,9 @@ DEPTH_LIST_MIN_INC = 1.0E-06    !   [m] default = 1.0E-10
                                 ! file.
 
 ! === module MOM_surface_forcing ===
-VARIABLE_WINDS = False          !   [Boolean] default = True
+!VARIABLE_WINDS = False          !   [Boolean] default = True
                                 ! If true, the winds vary in time after the initialization.
-VARIABLE_BUOYFORCE = False      !   [Boolean] default = True
+!VARIABLE_BUOYFORCE = True      !   [Boolean] default = True
                                 ! If true, the buoyancy forcing varies in time after the initialization of the
                                 ! model.
 WIND_CONFIG = "2gyre"           ! default = "zero"
@@ -316,13 +341,41 @@ WIND_CONFIG = "2gyre"           ! default = "zero"
                                 ! (const), (Neverworld), (scurves), (ideal_hurr), (SCM_ideal_hurr),
                                 ! (SCM_CVmix_tests) and (USER).
 
-!BUOY_CONFIG = "linear"
-
+BUOY_CONFIG = "linear"
+RESTOREBUOY = True
+FLUXCONST = 10.0
+FLUXCONST_T = 10.0
+SST_SOUTH = 0.001
+SST_NORTH = 8.5
+!LONGWAVEDOWN_FILE = "forcing_sst.nc"
+!
+!LONGWAVEUP_FILE = "forcing_sst.nc"
+!
+!SHORTWAVEUP_FILE = "forcing_sst.nc"
+!
+!SHORTWAVEDOWN_FILE = "forcing_sst.nc"
+!
+!SENSIBLEHEAT_FILE = "forcing_sst.nc" !
+                                ! The file with the sensible heat flux, in the variable
+                                ! given by SENSIBLE_FORCING_VAR.
+!
+!EVAPORATION_FILE = "forcing_sst.nc"
+!
+!SNOW_FILE = "forcing_sst.nc"
+!
+!PRECIP_FILE = "forcing_sst.nc"
+!
+!FRESHDISCHARGE_FILE = "forcing_sst.nc"
+!
+!SSTRESTORE_FILE = "forcing_sst.nc"
+!
+!SALINITYRESTORE_FILE = "forcing_sst.nc"
+!
 ! === module MOM_main (MOM_driver) ===
 DT_FORCING = 2400.0             !   [s] default = 1200.0
                                 ! The time step for changing forcing, coupling with other components, or
                                 ! potentially writing certain diagnostics. The default value is given by DT.
-DAYMAX = 100.0                    !   [days]
+DAYMAX = 40000.0                    !   [days]
                                 ! The final time of the whole simulation, in units of TIMEUNIT seconds.  This
                                 ! also sets the potential end time of the present run segment if the end time is
                                 ! not set via ocean_solo_nml in input.nml.
@@ -331,6 +384,6 @@ RESTART_CONTROL = 3             ! default = 1
                                 ! for a time-stamped file, and odd (bit 0) for a non-time-stamped file. A
                                 ! non-time-stamped restart file is saved at the end of the run segment for any
                                 ! non-negative value.
-RESTINT = 3.0                  !   [days] default = 0.0
+RESTINT = 100.0                  !   [days] default = 0.0
                                 ! The interval between saves of the restart file in units of TIMEUNIT.  Use 0
                                 ! (the default) to not save incremental restart files at all.
