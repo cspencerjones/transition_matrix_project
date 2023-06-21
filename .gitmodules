@@ -1,6 +1,7 @@
 [submodule "src/MOM6"]
 	path = src/MOM6
-	url = git@github.com:NOAA-GFDL/MOM6.git
+	url = git@github.com:cspencerjones/MOM6.git
+        branch = particle-multilevel
 [submodule "src/FMS"]
 	path = src/FMS
 	url = git@github.com:NOAA-GFDL/FMS.git
@@ -10,3 +11,4 @@
 [submodule "src/drifters"]
 	path = src/drifters
 	url = git@github.com:cspencerjones/drifters.git
+        branch = spencer-multilevel
